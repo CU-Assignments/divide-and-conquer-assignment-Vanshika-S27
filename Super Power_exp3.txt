@@ -1,0 +1,29 @@
+Super Power
+
+class Solution {
+    
+public:
+    int superPow(int a, vector<int>& b) {
+        const int MOD = 1337;
+        a %= MOD;
+        int result = 1; 
+        int n = b.size();
+        for (int i = 0; i < n; i++) {
+            result = (result * modPow(a, b[n - 1 - i], MOD)) % MOD;
+            a = modPow(a, 10, MOD);
+        }
+        return result;
+    }
+private:
+    int modPow(int base, int exp, int mod) {
+        int res = 1;
+        while (exp > 0) {
+            if (exp % 2 == 1) { 
+                res = (res * base) % mod;
+            }
+            base = (base * base) % mod; 
+            exp /= 2; 
+        }
+        return res;
+    }
+};

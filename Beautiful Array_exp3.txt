@@ -1,0 +1,27 @@
+Beautiful Array
+
+class Solution {
+public:
+    vector<int> beautifulArray(int n) {
+         if (n == 1) {
+            return {1};
+        }
+        
+        vector<int> odd = beautifulArray((n + 1) / 2); // Generate for odd indices
+        vector<int> even = beautifulArray(n / 2);     // Generate for even indices
+        
+        vector<int> result;
+        
+        // Append odd numbers
+        for (int num : odd) {
+            result.push_back(num * 2 - 1); // Convert to odd
+        }
+        
+        // Append even numbers
+        for (int num : even) {
+            result.push_back(num * 2); // Convert to even
+        }
+        
+        return result;
+    }
+};

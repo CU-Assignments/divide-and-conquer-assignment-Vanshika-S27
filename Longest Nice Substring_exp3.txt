@@ -1,0 +1,38 @@
+Longest Nice Substring:
+
+class Solution {
+public:
+    string longestNiceSubstring(string s) {
+        int maxLength = 0;
+        string longestNice = "";
+        int n = s.length();       
+        for (int i = 0; i < n; ++i) {
+            for (int j = i + 1; j <= n; ++j) {
+                string substring = s.substr(i, j - i);
+                if (isNice(substring)) {
+                    if (substring.length() > maxLength) {
+                        maxLength = substring.length();
+                        longestNice = substring;
+                    }
+                }
+            }
+        }
+        return longestNice; 
+    }
+private:
+    bool isNice(const string& substring) {
+        unordered_set<char> charSet;
+        for (char c : substring) {
+            charSet.insert(c);
+        }
+        for (char c : charSet) {
+            if (isalpha(c)) {
+                if (charSet.find(toupper(c)) == charSet.end() || 
+                    charSet.find(tolower(c)) == charSet.end()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+};
