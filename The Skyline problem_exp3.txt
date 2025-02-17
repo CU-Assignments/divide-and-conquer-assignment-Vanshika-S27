@@ -1,0 +1,61 @@
+The Skyline problem
+
+class Solution {
+public:
+    vector<vector<int>> getSkyline(vector<vector<int>>& buildings) {
+        vector<vector<int>> result;
+        vector<pair<int, int>> events; // (x, height)
+        
+        // Create events for each building
+        for (const auto& building : buildings) {
+            events.emplace_back(building[0], -building[2]); // left edge
+            events.emplace_back(building[1], building[2]);  // right edge
+        }
+        
+        // Sort events: first by x, then by height
+        sort(events.begin(), events.end());
+        
+        // Max-heap to keep track of heights
+        priority_queue<int> heights;
+        heights.push(0); // Ground level
+        
+        // Map to keep track of heights to be removed
+        map<int, int> heightCount;
+        
+        int prevMaxHeight = 0; // Previous maximum height
+        
+        for (const auto& event : events) {
+            int x = event.first;
+            int height = event.second;
+            
+            // If it's a left edge, add the height
+            if (height < 0) {
+                heights.push(-height);
+                heightCount[-height]++; // Increment the count of this height
+            } else { // If it's a right edge, remove the height
+                heightCount[height]--; // Decrement the count of this height
+            }
+            
+            // Clean up the heap to remove heights that are no longer valid
+            while (!heights.empty() && heightCount[heights.top()] == 0) {
+                heights.pop();
+            }
+            
+            // Get the current maximum height
+            int currentMaxHeight = heights.top();
+            
+            // If the maximum height has changed, we have a key point
+            if (currentMaxHeight != prevMaxHeight) {
+                result.push_back({x, currentMaxHeight});
+                prevMaxHeight = currentMaxHeight;
+            }
+        }
+        
+        // Add the final point at the end of the skyline
+        if (prevMaxHeight > 0) {
+            result.push_back({events.back().first, 0});
+        }
+        
+        return result;
+    }
+};
